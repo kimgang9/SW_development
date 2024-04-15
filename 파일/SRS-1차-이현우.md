@@ -19,8 +19,12 @@
     이미지 피쳐 기술(CNN,어텐션 네트워크), 이미지 결함 판별(MLP 등),
     Kotlin, Node.js, Django, Python(TensorFlow,PyTorch), 데이터 수집 및 전처리기술, 모델 학습 및 평가 기술 <br>
 
-    2.3     설계 및 구현시 제약사항(Design and Implementation constraint)<br>
-    ...
+    2.3     설계 및 구현시 제약사항(Design and Implementation constraint)<br>   
+    MVTEC AD dataset 과 MVTEC LOCO AD dataset 두 가지에 대한 벤치마크 결과들이 존재함.<br><br>
+    MVTEC AD dataset은 산업 검사에 중점을 둔 이상 탐지 방법의 벤치마킹을 위한 데이터셋.<br>
+    MVTEC LOCO AD dataset은 비지도 이상 지역화 알고리즘의 평가를 위해 설계. 구조적이상, 논리적이상을 모두 포함함.
+
+    현재 단계에서 논리적 이상까지 구현하기는 어렵다고 판단하여 MVTEC AD dataset 을 사용하여 진행해보기로 결정.
     <br><br>
 
 3. 기능적 요구사항<br>
@@ -28,7 +32,9 @@
     [옵션] 스마트폰으로 찍은 사진을 서버에 전송, 찍은 사진속의 물체에 결함지 존재하는지 여부를 알려주는 앱 개발(+앱을 위한 학습용 데이터셋 구축)<br><br> 
 
 4. 용어
-   
+   구조적 이상 : 구조적 이상은 제조 제품에서의 긁힘, 움푹 패인 부분, 또는 오염 등으로 나타남.
+
+   논리적 이상 : 허용되는 객체가 잘못된 위치에 존재하거나 필요한 객체가 전혀 존재하지 않는 등의 제약 조건을 위반하는 경우<br><br>
    
 5. 참조(Reference)<br>
     https://www.mvtec.com/company/research/datasets/mvtec-ad
