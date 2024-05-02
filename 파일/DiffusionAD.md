@@ -35,3 +35,18 @@
 비정상적인 영역이 가우시안 노이즈에 의해 교란된 후 다음으로 재구성되는 노이즈 대 노름 패러다임을 채택하는 확산 모델을 사용한 재구성 프로세스이다.<br>
 확산 모델의 반복적인 노이즈 제거 접근 방식보다 훨씬 빠른 1단계 노이즈 제거 패러다임을 제시하며, 재구성 품질을 더욱 향상시키기 위해 규범 유도 패러다임을 제안한다.<br>
 마지막으로, 분할 하위 네트워크는 불일치와 공통점을 활용한다.<br>
+
+<h3>코드</h3>
+주어진 확률 분포로부터 이미지를 샘플링하고, 가우시안 노이즈를 추가하여 샘플링된 이미지를 생성하는 과정<br>
+def sample_p(self, model, x_t, t, denoise_fn="gauss"): 
+    out = self.p_mean_variance(model, x_t, t) # 입력 이미지 x_t와 시간 변수 t에 대한 확률 분포의 평균과 분산 계산
+    if denoise_fn == "gauss": # 노이즈 함수가 가우시안인 경우, 이미지와 같은 크기의 가우시안 노이즈를 생성
+        noise = torch.randn_like(x_t) 
+    else: # 노이즈 함수가 가우시안이 아니면, 사용자가 지정한 노이즈 함수 denoise_fn을 사용하여 노이즈 생성
+        noise = denoise_fn(x_t, t)
+    # 시간 변수가 0이 아닌 위치를 나타내는 마스크를 생성
+    nonzero_mask = ( (t != 0).float().view(-1, *([1] * (len(x_t.shape) - 1))))
+    # 확률 분포의 평균과 분산을 이용하여 가우시안 노이즈를 추가한 후 이미지의 확률적 샘플을 생성
+    sample = out["mean"] + nonzero_mask * torch.exp(0.5 * out["log_variance"]) * noise 
+    # 샘플된 이미지와 초기 이미지의 예측값을 반환
+    return {"sample": sample, "pred_x_0": out["pred_x_0"]}
