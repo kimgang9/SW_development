@@ -38,6 +38,7 @@
 
 <h3>코드</h3>
 주어진 확률 분포로부터 이미지를 샘플링하고, 가우시안 노이즈를 추가하여 샘플링된 이미지를 생성하는 과정<br>
+~
 def sample_p(self, model, x_t, t, denoise_fn="gauss"): 
     out = self.p_mean_variance(model, x_t, t) # 입력 이미지 x_t와 시간 변수 t에 대한 확률 분포의 평균과 분산 계산
     if denoise_fn == "gauss": # 노이즈 함수가 가우시안인 경우, 이미지와 같은 크기의 가우시안 노이즈를 생성
@@ -50,3 +51,4 @@ def sample_p(self, model, x_t, t, denoise_fn="gauss"):
     sample = out["mean"] + nonzero_mask * torch.exp(0.5 * out["log_variance"]) * noise 
     # 샘플된 이미지와 초기 이미지의 예측값을 반환
     return {"sample": sample, "pred_x_0": out["pred_x_0"]}
+    ~
