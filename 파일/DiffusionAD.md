@@ -51,7 +51,7 @@ def sample_p(self, model, x_t, t, denoise_fn="gauss"):
     # 샘플된 이미지와 초기 이미지의 예측값을 반환
     return {"sample": sample, "pred_x_0": out["pred_x_0"]}
 ```
-<br>
+<br><br>
 ```Python
 # 데이터의 노이즈를 제거하여 초기 예측을 개선하고, 이상 감지를 위한 더 강력한 시스템을 구축하기 위한 단계
 def norm_guided_one_step_denoising(self, model, x_0, anomaly_label,args):
