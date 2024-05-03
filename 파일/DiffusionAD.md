@@ -51,3 +51,35 @@ def sample_p(self, model, x_t, t, denoise_fn="gauss"):
     # 샘플된 이미지와 초기 이미지의 예측값을 반환
     return {"sample": sample, "pred_x_0": out["pred_x_0"]}
 ```
+<br>
+```Python
+# 데이터의 노이즈를 제거하여 초기 예측을 개선하고, 이상 감지를 위한 더 강력한 시스템을 구축하기 위한 단계
+def norm_guided_one_step_denoising(self, model, x_0, anomaly_label,args):
+        # 주어진 범위 내에서 무작위로 낮은 스케일의 시간 단계를 생성
+        normal_t = torch.randint(0, args["less_t_range"], (x_0.shape[0],),device=x_0.device)
+	# 주어진 범위 내에서 무작위로 높은 스케일의 시간 단계를 생성
+        noisier_t = torch.randint(args["less_t_range"],self.num_timesteps,(x_0.shape[0],),device=x_0.device)
+        
+	# 낮은 스케일의 시간 단계에 대한 손실, 초기 예측, 예상되는 노이즈를 계산
+        normal_loss, x_normal_t, estimate_noise_normal = self.calc_loss(model, x_0, normal_t)
+	# 높은 스케일의 시간 단계에 대한 손실, 초기 예측, 예상되는 노이즈를 계산
+        noisier_loss, x_noiser_t, estimate_noise_noisier = self.calc_loss(model, x_0, noisier_t)
+        
+	# 높은 스케일의 시간 단계에서 예측된 초기 이미지를 얻음
+        pred_x_0_noisier = self.predict_x_0_from_eps(x_noiser_t, noisier_t, estimate_noise_noisier).clamp(-1, 1)
+	# 낮은 스케일의 시간 단계에서 예측된 초기 이미지를 샘플링함
+        pred_x_t_noisier = self.sample_q(pred_x_0_noisier, normal_t, estimate_noise_normal)   
+
+        # 정상 레이블에 대해서만 손실을 계산하고 평균을 취함
+        loss = (normal_loss["loss"]+noisier_loss["loss"])[anomaly_label==0].mean()
+	# 손실이 NaN인 경우 손실을 0으로 채움
+        if torch.isnan(loss):
+            loss.fill_(0.0)
+
+	# 예상되는 노이즈의 수정된 버전 계산
+        estimate_noise_hat = estimate_noise_normal - extract(self.sqrt_one_minus_alphas_cumprod, normal_t, x_normal_t.shape, x_0.device) * args["condition_w"] * (pred_x_t_noisier-x_normal_t)
+	# 수정된 예상 노이즈를 사용하여 초기 이미지에서 노이즈를 제거한 최종 초기 예측을 계산
+        pred_x_0_norm_guided = self.predict_x_0_from_eps(x_normal_t, normal_t, estimate_noise_hat).clamp(-1, 1)
+
+        return loss,pred_x_0_norm_guided,normal_t,x_normal_t,x_noiser_t
+```
