@@ -20,6 +20,7 @@
 
 - 기존의 CNN 은 입력값 x 에서 F(x) = H(x), 즉 타깃값 y 로 매핑하는 함수 H(x) 를 얻는것이 목적이었음.<br>
 - resnet 에서는 F(x)+x 를 최소화 시키는것이 목적. x (즉 input) 은 변할수 없는 값이므로 F(x) 를 0에 가깝게 만들어야하는데 , F(x) = H(x)+x 이므로, F(x)를 최소로 해준다는 것은, F(x) = H(x) - x 즉, H(x) - x를 최소로 하는 것. 여기서 H(x)-x 를 잔차 (residual) 이라고 한다.<br>
+- 간단하게 말하면 입력과 출력의 차이만을 학습시켜서 더 간단하고 학습과정이 쉬워진다.
   
 위 과정에서 skip connection(=identify mapping, 입력값 = 출력값) 을 사용하여 곱셈 연산에서 덧셈 연산으로 변환되며, 그로인해 정보의 전달이 쉬워지며, 연속된 곱셈(layer 중첩) 으로 인한 vanishing 이 일어나지 않음<br><br>
 <p align="center">
@@ -29,9 +30,15 @@
 해당 논문에서는 비교를 위해 3가지의 모델을 비교하는데 <br>
 
 - VGG 네트워크: VGG 네트워크는 3x3 컨볼루션 레이어를 중첩하여 사용하며, 특징 맵 크기가 반으로 줄어들 때 필터의 수를 두 배로 늘리는 것이 특징
-- Plain 네트워크: Plain 네트워크는 VGG의 설계 철학을 따르고,  feature map size가 절반으로 줄어들면 채널 수를 두 배로 늘림. feature map을 줄일 때는 Conv filter의 stride를 2로 설정.Plain Network는 VGGNet보다 필터수가 적고 간단한 구조임 (34개의 layer는 36억 Flops로 VGGNet의 18%)
+- Plain 네트워크: Plain 네트워크는 VGG의 설계 철학을 따르고,  feature map size가 절반으로 줄어들면 채널 수를 두 배로 늘림.<br>
+    >3x3 conv, 64 에서 3x3 conv, 128, /2 로 갈때, feature(/2 stride 합성곱으로 줄임), 필터의 개수(64->128 두배로 늘려서), 정보의 손실이 없도록함<br>
+
+    Plain Network는 VGGNet보다 필터수가 적고 간단한 구조임 (34개의 layer는 36억 Flops로 VGGNet의 18%)
   
-- Residual 네트워크: Residual 네트워크는 Plain 네트워크에 skip connection을 추가. 만약 입력과 layer를 통과한 출력의 차원이 다르다면 두 가지 방법으로 차원을 조절함
+- Residual 네트워크: Residual 네트워크는 Plain 네트워크에 skip connection을 추가.   
+  >7x7 conv, 64, /2 는 7x7 크기의 커널을 사용하는 합성곱(convolution) 연산, 64는 필터의 수, "/2"는 스트라이드(stride)가 2라는 것을 나타냄. 
+  
+  만약 입력과 layer를 통과한 출력의 차원이 다르다면 두 가지 방법으로 차원을 조절함
   -  첫 번째는 단순히 zero padding하는것으로 추가적인 파라미터가 없습니다. 
   -  두 번째는 projection shortcut하는 방법으로 차원을 맞추기 위해 1x1 Conv Filter를 통과시킵니다.
   
@@ -39,7 +46,7 @@
 
 <p align="center">
  <img src = "./image/figure4.png"><br>
- - plain(좌) , ResNet(우) 
+ - plain(좌) , ResNet(우) <br>
 <img src = "./image/table2.png"><br>
  - Top-1 error(실제 정답 1개를 맞춰야하는 문제)
 </p>
@@ -48,3 +55,17 @@
 결과
 - plain network 에서는 더 얇은 망인 18-layer 에서 보다 더 깊은 망인 34-layer 에서 error 가 더 큰 validation error 가 발생함.
 - ResNet 에서는 validation error 없이 더 깊은 망에서 더 좋은 정확도를 보임.
+<br><br>
+더 깊은 망을 실험하기 위해서 50,101,152 layer 를 가진 네트워크를 테스트함. 이때는 학습시간을 줄이기 위해서 Bottleneck구조의 Residual block이 활용됨.<br>
+    > Bottleneck구조는 아래 그림과 같이 1x1 Convolutional layer를 활용해 네트워크의 차원을 줄였다가 3x3 Conv layer 통과 후 다시 차원을 원래 크기로 늘리는 구조
+
+<p align="center">
+ <img src = "./image/figure5.png"><br>
+ - Residual block
+</p>
+
+<p align="center">
+ <img src = "./image/arch.png"><br>
+ - Resnet50 architecture
+</p>
+
