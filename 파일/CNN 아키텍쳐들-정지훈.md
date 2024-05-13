@@ -1,3 +1,15 @@
+
+# Wide ResNet50-2 모델 설명
+
+~ 기본 개념
+
+ResNet (Residual Network)은 딥러닝에서 매우 깊은 네트워크를 효과적으로 훈련할 수 있도록 설계된 구조입니다.
+
+~ 특징
+
+이 모델은 잔차 연결(residual connections)을 통해 입력을 레이어의 출력에 직접 더해주어, 깊은 네트워크에서 발생할 수 있는 소실된 기울기(vanishing gradient) 문제를 해결합니다.
+"Wide"는 네트워크의 채널 수가 표준 ResNet50에 비해 더 많다는 것을 의미합니다. Wide ResNet50-2는 채널의 수를 두 배로 증가시켜, 더 많은 특징을 추출할 수 있도록 설계되었습니다.
+
 ```
 import torch
 from torchviz import make_dot
@@ -19,20 +31,23 @@ if __name__ == '__main__':
     main()
 ```
 
-![프로필 이미지].(./wide_resnet50_2_architecture.png)
-
-# Wide ResNet50-2 모델 설명
-
-~ 기본 개념
-
-ResNet (Residual Network)은 딥러닝에서 매우 깊은 네트워크를 효과적으로 훈련할 수 있도록 설계된 구조입니다.
-
-~ 특징
-
-이 모델은 잔차 연결(residual connections)을 통해 입력을 레이어의 출력에 직접 더해주어, 깊은 네트워크에서 발생할 수 있는 소실된 기울기(vanishing gradient) 문제를 해결합니다.
-"Wide"는 네트워크의 채널 수가 표준 ResNet50에 비해 더 많다는 것을 의미합니다. Wide ResNet50-2는 채널의 수를 두 배로 증가시켜, 더 많은 특징을 추출할 수 있도록 설계되었습니다.
+![프로필 이미지](./wide_resnet50_2_architecture.png)
 
 
+
+# 사용자 정의 CNN 모델
+
+~ 모델 구조
+
+간단한 CNN 모델로, 세 개의 컨볼루션 레이어와 두 개의 완전 연결된 레이어로 구성됩니다.
+중간에는 최대 풀링과 드롭아웃 레이어가 포함되어 있어, 과적합을 방지하고 특징을 요약합니다.
+
+~ 기술적 설명
+
+레이어 구성:
+첫 번째 컨볼루션 레이어는 32개의 필터를 사용하여 입력 이미지에서 저수준 특징을 추출합니다.
+두 번째와 세 번째 레이어는 각각 64와 128개의 필터를 사용, 더 복잡한 특징을 추출합니다.
+각 컨볼루션 레이어 후에는 최대 풀링을 사용하여 차원을 축소하고, 드롭아웃은 과적합을 방지합니다.
 
 
 
@@ -73,24 +88,21 @@ y = model(inputs)
 dot = make_dot(y, params=dict(list(model.named_parameters()) + [('input', inputs)]))
 dot.render('cnn_model', format='png', cleanup=True)  # 'cnn_model.png' 파일 생성
 ```
-![프로필 이미지].(./cnn_model.png)
-
-# 사용자 정의 CNN 모델
-
-~ 모델 구조
-
-간단한 CNN 모델로, 세 개의 컨볼루션 레이어와 두 개의 완전 연결된 레이어로 구성됩니다.
-중간에는 최대 풀링과 드롭아웃 레이어가 포함되어 있어, 과적합을 방지하고 특징을 요약합니다.
-
-~ 기술적 설명
-
-레이어 구성:
-첫 번째 컨볼루션 레이어는 32개의 필터를 사용하여 입력 이미지에서 저수준 특징을 추출합니다.
-두 번째와 세 번째 레이어는 각각 64와 128개의 필터를 사용, 더 복잡한 특징을 추출합니다.
-각 컨볼루션 레이어 후에는 최대 풀링을 사용하여 차원을 축소하고, 드롭아웃은 과적합을 방지합니다.
+![프로필 이미지](./cnn_model.png)
 
 
 
+
+# image classification에 쓰이는 plot_model
+
+~ 모델 아키텍처 설명
+
+사용된 CNN 모델은 주로 이미지 처리 작업에 사용되며, 여러 개의 컨볼루션 레이어와 풀링 레이어, 완전 연결 레이어로 구성되어 있습니다. 
+각 레이어는 특정 기능을 수행하며, 예를 들어 컨볼루션 레이어는 이미지에서 유용한 특징을 추출하는 데 사용됩니다.
+
+~ TensorFlow의 plot_model 기능 사용
+
+show_shapes=True는 각 레이어의 입력 및 출력 형태를 표시하게 하며, show_layer_names=True는 각 레이어의 이름을 표시합니다.
 
 
 
@@ -114,18 +126,9 @@ out = model(x)
 plot_model(model, to_file='model_architecture.png', show_shapes=True, show_layer_names=True)
 '''
 
-![프로필 이미지].(./model_architecture.png)
+![프로필 이미지](./model_architecture.png)
 
-# image classification에 쓰이는 plot_model
 
-~ 모델 아키텍처 설명
-
-사용된 CNN 모델은 주로 이미지 처리 작업에 사용되며, 여러 개의 컨볼루션 레이어와 풀링 레이어, 완전 연결 레이어로 구성되어 있습니다. 
-각 레이어는 특정 기능을 수행하며, 예를 들어 컨볼루션 레이어는 이미지에서 유용한 특징을 추출하는 데 사용됩니다.
-
-~ TensorFlow의 plot_model 기능 사용
-
-show_shapes=True는 각 레이어의 입력 및 출력 형태를 표시하게 하며, show_layer_names=True는 각 레이어의 이름을 표시합니다.
 
 
 
