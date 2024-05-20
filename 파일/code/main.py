@@ -1,20 +1,28 @@
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.layers import Dropout, BatchNormalization
+from tensorflow.keras.callbacks import EarlyStopping
 
 # 데이터셋 경로
-train_dir = 'C:/Users/lhw0841/PycharmProjects/pythonProject/sw_dev/dataset/car-damage-dataset/data1a/training'
-validation_dir = 'C:/Users/lhw0841/PycharmProjects/pythonProject/sw_dev/dataset/car-damage-dataset/data1a/validation'
+train_dir = 'C:/Users/LEE/PycharmProjects/sw_dev/dataset/car-damage-dataset/data1a/training'
+validation_dir = 'C:/Users/LEE/PycharmProjects/sw_dev/dataset/car-damage-dataset/data1a/validation'
 
 # 이미지 데이터 제너레이터 생성
-train_datagen = ImageDataGenerator(rescale=1./255) # ImageDataGenerator 클래스의 인스턴스 생성.
-test_datagen = ImageDataGenerator(rescale=1./255) # rescale=1./255 는 이미지의 픽셀 값을 0~1사이로 정규화.
+# 데이터 증강을 사용하여 모델의 일반화 성능을 향상시킵니다.
+train_datagen = ImageDataGenerator(
+    rescale=1./255, # 픽셀 값을 0~1사이로 정규화
+    rotation_range=20, # 20도 범위에서 임의로 원본 이미지 회전
+    width_shift_range=0.2, # 20% 범위에서 임의로 원본 이미지를 수평으로 이동
+    height_shift_range=0.2, # 20% 범위에서 임의로 원본 이미지를 수직으로 이동
+    horizontal_flip=True) # 임의로 원본 이미지를 수평으로 뒤집기
+
+test_datagen = ImageDataGenerator(rescale=1./255)
 
 # ImageDataGenerator 의 flow_from_directory 메서드 호출
-# 지정된 디렉토리에서 이미지를 로드하고, 이미지 데이터를 전처리하며, 배치 단위로 이미지와 레이블을 제공
 train_generator = train_datagen.flow_from_directory(
-        train_dir, # 경로 설정
-        target_size=(224, 224), # 이미지 크기 지정
-        batch_size=20, # 한번에 학습하는 개수
+        train_dir,
+        target_size=(224, 224),
+        batch_size=20,
         class_mode='binary')
 
 validation_generator = test_datagen.flow_from_directory(
@@ -23,31 +31,44 @@ validation_generator = test_datagen.flow_from_directory(
         batch_size=20,
         class_mode='binary')
 
-print(len(train_generator),len(validation_generator)) ## 데이터 증강 적용중 , 184,46 나옴.
-
 # ResNet50 모델 사용
-base_model = tf.keras.applications.ResNet50(weights='imagenet', # ImageNet 데이터셋으로 훈련된 가중치를 사용
-                                            include_top=False, # 네트워크의 최상단에 완전 연결 레이어(즉, 분류를 담당하는 레이어)를 포함하지 않도록 설정
-                                            input_shape=(224, 224, 3)) # 네트워크에 입력되는 이미지 텐서의 크기를 지정
+base_model = tf.keras.applications.ResNet50(
+    weights='imagenet', # ImageNet 데이터셋으로 훈련된 가중치를 사용
+    include_top=False, # 네트워크의 최상단에 완전 연결 레이어(즉, 분류를 담당하는 레이어)를 포함하지 않도록 설정
+    input_shape=(224, 224, 3))
 
-# base_model.trainable = False: 이 줄은 ResNet50 모델의 가중치를 고정합니다. 즉, 훈련하는 동안 이 가중치가 업데이트되지 않도록 설정
-base_model.trainable = False
+# ResNet50 모델의 일부 레이어의 가중치를 재학습하도록 설정
+# 이를 통해 모델이 특정 데이터셋에 더 잘 적응하도록 합니다.
+for layer in base_model.layers[:143]:
+    layer.trainable = False
+for layer in base_model.layers[143:]:
+    layer.trainable = True
 
-model = tf.keras.models.Sequential([ # Sequential : 순서대로 레이어를 쌓는 모델
-  base_model, # ResNet50
-  tf.keras.layers.GlobalAveragePooling2D(), # average
+model = tf.keras.models.Sequential([
+  base_model,
+  tf.keras.layers.GlobalAveragePooling2D(),
+  Dropout(0.5), # 드롭아웃을 추가하여 과적합을 방지합니다.
+  BatchNormalization(), # 배치 정규화를 추가하여 학습을 안정화하고 속도를 높입니다.
   tf.keras.layers.Dense(1, activation='sigmoid')
 ])
 
-model.compile(optimizer=tf.keras.optimizers.RMSprop(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=tf.keras.optimizers.RMSprop(learning_rate=0.0001),
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
 
-# model 구조 출력
 model.summary()
+
+# 조기 종료 콜백 추가
+# 검증 세트에 대한 성능이 더 이상 향상되지 않을 때 학습을 중단하여 과적합을 방지합니다.
+early_stopping = EarlyStopping(monitor='val_loss', patience=3)
 
 history = model.fit(
       train_generator,
-      steps_per_epoch=184, # 100 으로 설정시, 한 epoch에 100개의 batch를 시도. batch = 20 일시 총 2000개 필요. train 에는 920개가 있으므로 총 1840개 처리후 입력이 부족해짐.
       epochs=10,
       validation_data=validation_generator,
-      validation_steps=46)
-# 데이터 증강을 사용시에는 len(train_generator), len(validation_generator) 를 사용해야함. 기존의 데이터셋 입력수와 다를것이기 때문
+      callbacks=[early_stopping]) # 조기 종료 콜백 사용
+
+loss, accuracy = model.evaluate(validation_generator)
+
+print('Test accuracy :', accuracy)
+print('Test loss :', loss)
