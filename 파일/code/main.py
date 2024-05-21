@@ -72,3 +72,6 @@ loss, accuracy = model.evaluate(validation_generator)
 
 print('Test accuracy :', accuracy)
 print('Test loss :', loss)
+
+#Test accuracy : 0.676086962223053
+#Test loss : 0.8829212188720703
