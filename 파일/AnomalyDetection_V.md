@@ -8,6 +8,8 @@
 > https://github.com/kvfrans/variational-autoencoder
 4. AnomalyDetectionCVPR2018-Pytorch
 > https://github.com/ekosman/AnomalyDetectionCVPR2018-Pytorch?tab=readme-ov-file
+5. AnomalyDetection-Keras
+> https://github.com/anncollin/AnomalyDetection-Keras
 
 추후에 사용자들이 차량을 전체적으로 영상을 촬영후 이 데이터셋을 바탕으로 결함탐지를 진행하기 위해 (1) AnomalyDetectionCVPR2018 코드를 참고하는것이 가장 좋을것으로 판단.
 <br><br>
