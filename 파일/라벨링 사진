@@ -1,0 +1,2 @@
+다운로드 코드<br>
+curl -L "https://app.roboflow.com/ds/K3t7qFuMdl?key=5QkVDH73si" &gt; roboflow.zip; unzip roboflow.zip; rm roboflow.zip
