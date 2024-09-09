@@ -94,3 +94,6 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
+
+#Test accuracy : 0.9734848737716675
+#Test loss : 0.05906646326184273
