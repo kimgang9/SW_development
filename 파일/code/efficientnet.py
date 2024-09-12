@@ -1,7 +1,6 @@
 ### Efficientnet모델
 
 ```python
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -83,5 +82,4 @@ with torch.no_grad():
 acc = accuracy_score(all_labels, all_preds)
 f1 = f1_score(all_labels, all_preds, average='weighted')
 print(f'Test Accuracy: {acc}, Test F1 Score: {f1}')
-
 ```
