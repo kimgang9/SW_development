@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="front_image_description">차량 앞면 사진</string>
+    <string name="driver_front_image_description">운전자석 앞면 사진</string>
+    <string name="driver_rear_image_description">운전자석 뒷면 사진</string>
+    <string name="passenger_front_image_description">보조석 앞면 사진</string>
+    <string name="passenger_rear_image_description">보조석 뒷면 사진</string>
+    <string name="rear_image_description">차량 후면 사진</string>
+</resources>
