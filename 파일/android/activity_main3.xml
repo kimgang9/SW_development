@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 차량 전면 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/front_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/front_image_description"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/front_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="차량 전면"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/select_front_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="사진 선택" />
+
+            <Button
+                android:id="@+id/upload_front_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Upload" />
+        </LinearLayout>
+
+        <!-- 운전자석 앞면 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/driver_front_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/driver_front_image_description"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/driver_front_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="운전자석 앞면"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/select_driver_front_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="사진 선택" />
+
+            <Button
+                android:id="@+id/upload_driver_front_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Upload" />
+        </LinearLayout>
+
+        <!-- 운전자석 뒷면 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/driver_rear_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/driver_rear_image_description"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/driver_rear_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="운전자석 뒷면"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/select_driver_rear_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="사진 선택" />
+
+            <Button
+                android:id="@+id/upload_driver_rear_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Upload" />
+        </LinearLayout>
+
+        <!-- 보조석 앞면 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/passenger_front_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/passenger_front_image_description"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/passenger_front_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="보조석 앞면"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/select_passenger_front_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="사진 선택" />
+
+            <Button
+                android:id="@+id/upload_passenger_front_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Upload" />
+        </LinearLayout>
+
+        <!-- 보조석 뒷면 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/passenger_rear_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/passenger_rear_image_description"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/passenger_rear_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="보조석 뒷면"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/select_passenger_rear_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="사진 선택" />
+
+            <Button
+                android:id="@+id/upload_passenger_rear_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Upload" />
+        </LinearLayout>
+
+        <!-- 차량 후면 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/rear_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/rear_image_description"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/rear_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="차량 후면"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/select_rear_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="사진 선택" />
+
+            <Button
+                android:id="@+id/upload_rear_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Upload" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_page_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="확인"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </LinearLayout>
+
+
+</ScrollView>
