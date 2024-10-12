@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자동차 결함 탐지 서비스</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        button {
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        .slide {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>자동차 결함 탐지 서비스</h1>
+
+        <!-- 슬라이드 1 -->
+        <div class="slide active">
+            <h2>자동차 결함탐지 서비스</h2>
+            <p>자동차의 결함을 탐지하기 위한 AI 기반 서비스입니다.</p>
+            <button onclick="nextSlide()">검사 시작하기</button>
+        </div>
+
+        <!-- 슬라이드 2 -->
+        <div class="slide">
+            <h2>사용 방법</h2>
+            <p>1. 자동차의 전면, 후면, 측면 사진을 촬영하세요.</p>
+            <p>2. 촬영한 사진을 업로드하고 분석 결과를 확인하세요.</p>
+            <!--img src="image1.jpg" alt="자동차 이미지 1"-->
+            <button onclick="nextSlide()">다음</button>
+        </div>
+
+        <!-- 이미지 선택 슬라이드 -->
+        <div class="slide">
+            <h2>이미지 선택</h2>
+            <input type="file" accept="image/*">
+            <button onclick="nextSlide()">다음</button>
+        </div>
+
+        <!-- 분석 대기 중 슬라이드 -->
+        <div class="slide">
+            <h2>분석 대기 중...</h2>
+            <button onclick="analyzeImage()">이미지 분석</button>
+        </div>
+
+        <!-- 결과 -->
+        <div id="result" class="slide">
+            <h2>결과</h2>
+            <p id="analysisResult">분석 중...</p>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        function analyzeImage() {
+            const fileInput = document.querySelector('input[type="file"]');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            console.log('이미지 분석 요청 시작');  // 이미지 업로드 확인 메시지
+
+            fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('analysisResult').innerText = '분석 완료: ' + data.result;
+                nextSlide();  // 결과 슬라이드로 이동
+                console.log('분석 완료: ' + data.result);  // 분석 결과 출력
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+    </script>
+</body>
+</html>
