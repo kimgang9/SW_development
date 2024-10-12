@@ -1,3 +1,4 @@
+# python app.py (flask 설치후 터미널에서)
 from flask import Flask, render_template, request, jsonify
 import torch
 from efficientnet import model  # efficientnet.py에서 정의한 model을 가져옴
